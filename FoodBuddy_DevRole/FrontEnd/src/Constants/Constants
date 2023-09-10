@@ -1,0 +1,10 @@
+const Constants = {
+    registerapi: 'localhost:8080/api/v1/registration',
+    callLoginApi:'localhost:8080/api/v1/login',
+    callCreateGroupApi: 'localhost:8080/api/v1/groupApi/Create',
+    callJoinGroupApi:'localhost:8080/api/v1/groupApi/Join',
+    callViewGroupDataApi:'localhost:8080/api/v1/groupApi/view'
+
+};
+
+export default Constants;

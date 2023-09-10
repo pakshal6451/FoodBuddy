@@ -1,0 +1,66 @@
+stages:
+  - build
+  - test
+  - code_quality
+  - issue
+
+backend-build-job:
+  stage: build
+  script:
+    - chmod 777 -R FoodBuddy_DevRole
+    - cd FoodBuddy_DevRole/backEnd/foodBuddy
+    - mvn clean install -Dmaven.test.skip=true
+    - cd target
+    - cp ./*.jar /home/csci5308vm14/foodbuddy/backend
+  artifacts:
+    paths:
+      - FoodBuddy_DevRole/backEnd/foodBuddy/target
+  tags:
+    - csci5308grp14_shell
+
+backend-test-job:
+  stage: test
+  image: maven:latest
+  script:
+    - cd FoodBuddy_DevRole/backEnd/foodBuddy
+    - mvn test
+  tags:
+    - csci5308grp14_shell
+
+frontend-build-job:
+  stage: build
+  script:
+    - export PATH=/home/csci5308vm14/.nvm/versions/node/v18.15.0/bin/:$PATH
+    - cd FoodBuddy_DevRole/FrontEnd
+    - npm install
+    - unset CI 
+    - npm run build
+    - cp -R build /home/csci5308vm14/foodbuddy/frontend
+  tags:
+    - csci5308grp14_shell
+  artifacts:
+    paths:
+      - FoodBuddy_DevRole/FrontEnd/build/
+
+code-quality:       # This job runs in the build stage, which runs first.
+  stage: code_quality
+  image: openjdk:11
+  script:
+    - mkdir smells/
+    - java -jar $SOURCE_CODE/.gitlab/DesigniteJava.jar -i $SOURCE_CODE -o smells/ -d
+    # - ls smells/ -a
+  artifacts:
+    paths:
+      - smells/
+      - $SOURCE_CODE
+
+issue-job:
+  stage: issue
+  dependencies:
+    - code-quality
+  image: "python:3.10"
+  script:
+    - ls smells/ -a
+    - python --version
+    - pip install -r $SOURCE_CODE/.gitlab/requirements.txt
+    - python $SOURCE_CODE/.gitlab/issue.py $CI_COMMIT_SHA

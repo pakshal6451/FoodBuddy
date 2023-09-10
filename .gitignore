@@ -1,0 +1,20 @@
+.idea/
+FoodBuddy_DevRole/.DS_Store
+FoodBuddy_DevRole/backEnd/.DS_Store
+/.metadata/
+FoodBuddy_DevRole/FrontEnd/package-lock.json
+FoodBuddy_DevRole/FrontEnd/node_modules
+package-lock.json
+.DS_Store
+../../node_modules/
+ ../../package.json
+ ../../.DS_Store
+package-lock.json
+../../.gitignore
+src/static/
+../../node_modules/
+../../package.json
+
+
+
+
